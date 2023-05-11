@@ -26,5 +26,7 @@ public class MemberVo extends CommPaginationReqVo {
     private String memberPassword;
     @Schema(description="회원 table 컬럼 member_name", example="string")
     private String memberName;
+    @Schema(description="회원 table 컬럼 nickname", example="string")
+    private String nickname;
 
 }

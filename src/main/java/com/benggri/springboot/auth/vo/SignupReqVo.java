@@ -22,12 +22,15 @@ public class SignupReqVo {
     private String memberPassword;
     @Schema(description="회원 가입 요청 회원 이름", required=true)
     private String memberName;
+    @Schema(description="회원 가입 요청 회원 이름", required=true)
+    private String nickname;
 
     public MemberVo toMember(PasswordEncoder passwordEncoder) {
         return MemberVo.builder()
                        .memberId(this.memberId)
                        .memberName(this.memberName)
                        .memberPassword(passwordEncoder.encode(this.memberPassword))
+                       .nickname(this.nickname)
                        .build();
     }
 }

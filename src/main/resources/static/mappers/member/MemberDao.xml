@@ -9,6 +9,7 @@
              , member_id       as member_id
              , member_password as member_password
              , member_name     as member_name
+             , nickname        as nickname
           from member_info
          where 1=1
         <if test='memberId != null and memberId !="" '>
@@ -40,6 +41,7 @@
              , member_id       as member_id
              , member_password as member_password
              , member_name     as member_name
+             , nickname        as nickname
           from member_info
          where member_idx = #{memberIdx}
     </select>
@@ -50,6 +52,7 @@
              , member_id       as member_id
              , member_password as member_password
              , member_name     as member_name
+             , nickname        as nickname
           from member_info
          where member_id = #{memberId}
     </select>
@@ -60,10 +63,12 @@
                member_id
              , member_password
              , member_name
+             , nickname
         ) values (
                #{memberId}
              , #{memberPassword}
              , #{memberName}
+             , #{nickname}
         )
     </insert>
 

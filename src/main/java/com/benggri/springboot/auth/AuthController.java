@@ -44,7 +44,6 @@ public class AuthController {
         HttpServletRequest request,
         @Parameter(name="signupReqVo", required=true, description="회원가입을 위한 사용자 ID, 비밀번호, 이름") @RequestBody SignupReqVo signupReqVo
     ) {
-        if ( isEmptyObj(signupReqVo.getMemberId()) || isEmptyObj(signupReqVo.getMemberName()) || isEmptyObj(signupReqVo.getMemberPassword()) ) throw new BadRequestException("필수입력값을 확인하세요");
         return authService.signup(signupReqVo);
     }
 

@@ -49,8 +49,7 @@ public class MemberService {
 
     @Transactional
     public int createMember(MemberVo memberVo) {
-        memberDao.createMember(memberVo);
-        return 1;
+        return memberDao.createMember(memberVo);
     }
 
     public CommResultVo updateMember(MemberVo memberVo) {
