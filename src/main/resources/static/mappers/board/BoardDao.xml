@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.benggri.springboot.board.BoardDao">
+
+    <select id="getBoards" parameterType="BoardVo" resultType="BoardVo">
+        select /* BoardDao.getBoards */
+               board_idx  as board_idx
+             , board_name as board_name
+             , board_desc as board_desc
+             , use_yn     as use_yn
+          from board
+         where 1=1
+        <if test='boardName != null and boardName != ""'>
+           and board_name like concat('%',#{boardName},'%')
+        </if>
+         order by board_idx desc
+         limit #{limit} offset #{offset}
+    </select>
+
+    <select id="getBoardsTotCnt" parameterType="BoardVo" resultType="int">
+        select /* BoardDao.getBoardsTotCnt */
+               count(*) as tot_cnt
+          from board
+         where 1=1
+        <if test='boardName != null and boardName != ""'>
+           and board_name like concat('%',#{boardName},'%')
+        </if>
+    </select>
+
+    <select id="getBoard" parameterType="BoardVo" resultType="BoardVo">
+        select /* BoardDao.getBoard */
+               board_idx  as board_idx
+             , board_name as board_name
+             , board_desc as board_desc
+             , use_yn     as use_yn
+          from board
+         where board_idx = #{boardIdx}
+    </select>
+
+    <insert id="createBoard" parameterType="BoardVo" useGeneratedKeys="true" keyProperty="boardIdx">
+        insert /* BoardDao.createBoard */
+          into board (
+               board_name
+             , board_desc
+             , use_yn
+        ) values (
+               #{boardName}
+             , #{boardDesc}
+             , #{useYn}
+        )
+    </insert>
+
+    <update id="updateBoard" parameterType="BoardVo">
+        update /* BoardDao.updateBoard */
+               board
+           set board_name = #{boardName}
+             , board_desc = #{boardDesc}
+             , use_yn     = #{useYn}
+         where board_idx = #{boardIdx}
+    </update>
+
+    <delete id="deleteBoard" parameterType="BoardVo">
+        delete /* BoardDao.deleteBoard */
+          from board
+         where board_idx = #{boardIdx}
+    </delete>
+
+</mapper>
