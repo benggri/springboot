@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.benggri.springboot.post.PostDao">
+
+    <sql id="sql_fromWhere_getPosts">
+          from            post         m
+               inner join post_info   d1 on m.post_idx   = d1.post_idx
+               inner join member_info d2 on m.writer_idx = d2.member_idx
+         where 1=1
+           and (m.stts_cd = '1000'
+        <if test='writer_idx != 0'>
+               or m.writer_idx = #{writer_idx}
+        </if>
+           )
+        <if test='title !=null and title != ""'>
+           and m.title        like concat('%',#{title}     ,'%')
+        </if>
+        <if test='contents !=null and contents != ""'>
+           and m.contents     like concat('%',#{contents}  ,'%')
+        </if>
+        <if test='memberId !=null and memberId != ""'>
+           and d2.member_id   like concat('%',#{memberId}  ,'%')
+        </if>
+        <if test='memberName !=null and memberName != ""'>
+           and d2.member_name like concat('%',#{memberName},'%')
+        </if>
+        <if test='nickname !=null and nickname != ""'>
+           and d2.nickname    like concat('%',#{nickname}  ,'%')
+        </if>
+    </sql>
+    <select id="getPosts" parameterType="PostVo" resultType="PostVo">
+        select /* PostDao.getPosts */
+               m.post_idx     as post_idx
+             , m.board_idx    as board_idx
+             , m.title        as title
+             , m.writer_idx   as writer_idx
+             , d2.member_id   as member_id
+             , d2.member_name as member_name
+             , d2.nickname    as nickname
+             , m.write_date   as write_date
+             , m.stts_cd      as stts_cd
+             , d1.view_cnt    as view_cnt
+             , d1.like_cnt    as like_cnt
+             , d1.unlike_cnt  as unlike_cnt
+        <include refid="sql_fromWhere_getPosts"></include>
+         order by m.post_idx desc
+         limit #{limit} offset #{offset}
+    </select>
+
+    <select id="getPostsTotCnt" parameterType="PostVo" resultType="int">
+        select /* PostDao.getPostsTotCnt */
+               count(*) as tot_cnt
+        <include refid="sql_fromWhere_getPosts"></include>
+    </select>
+
+    <select id="getPost" parameterType="PostVo" resultType="PostVo">
+        select /* PostDao.getPost */
+               m.post_idx     as post_idx
+             , m.board_idx    as board_idx
+             , m.title        as title
+             , m.contents     as contents
+             , m.writer_idx   as writer_idx
+             , d2.member_id   as member_id
+             , d2.member_name as member_name
+             , d2.nickname    as nickname
+             , m.write_date   as write_date
+             , m.stts_cd      as stts_cd
+             , d1.view_cnt    as view_cnt
+             , d1.like_cnt    as like_cnt
+             , d1.unlike_cnt  as unlike_cnt
+          from            post         m
+               inner join post_info   d1 on m.post_idx   = d1.post_idx
+               inner join member_info d2 on m.writer_idx = d2.member_idx
+         where m.post_idx = #{postIdx}
+    </select>
+
+    <insert id="createPost" parameterType="PostVo" useGeneratedKeys="true" keyProperty="postIdx">
+        insert /* PostDao.createPost */
+          into post (
+               board_idx
+             , title
+             , contents
+             , writer_idx
+             , write_date
+             , stts_cd
+        ) values (
+               #{boardIdx}
+             , #{title}
+             , #{contents}
+             , #{writerIdx}
+             , #{writeDate}
+             , #{sttsCd}
+        )
+    </insert>
+
+    <insert id="createPostInfo" parameterType="PostVo">
+        insert /* PostDao.createPostInfo */
+          into post_info (
+               post_idx
+        ) values (
+               #{postIdx}
+        )
+    </insert>
+
+    <update id="updatePost" parameterType="PostVo">
+        update /* PostDao.updatePost */
+               post
+           set title    = #{title}
+             , contents = #{contents}
+             , stts_cd  = #{sttsCd}
+         where post_idx = #{postIdx}
+    </update>
+
+    <delete id="deletePost" parameterType="PostVo">
+        delete /* PostDao.deletePost */
+          from post
+         where post_idx = #{postIdx}
+    </delete>
+
+    <update id="updatePostView" parameterType="PostVo">
+        update /* PostDao.updatePostView */
+               post_info
+           set view_cnt = view_cnt + 1
+         where post_idx = #{postIdx}
+    </update>
+
+    <update id="updatePostLike" parameterType="PostVo">
+        update /* PostDao.updatePostLike */
+               post_info
+           set like_cnt = like_cnt + 1
+         where post_idx = #{postIdx}
+    </update>
+
+    <update id="updatePostLikeCancel" parameterType="PostVo">
+        update /* PostDao.updatePostLikeCancel */
+               post_info
+           set like_cnt = like_cnt - 1
+         where post_idx = #{postIdx}
+    </update>
+
+    <update id="updatePostUnlike" parameterType="PostVo">
+        update /* PostDao.updatePostUnlike */
+               post_info
+           set unlike_cnt = unlike_cnt + 1
+         where post_idx = #{postIdx}
+    </update>
+
+    <update id="updatePostUnlikeCancel" parameterType="PostVo">
+        update /* PostDao.updatePostUnlikeCancel */
+               post_info
+           set unlike_cnt = unlike_cnt - 1
+         where post_idx = #{postIdx}
+    </update>
+
+    <select id="getPostLike" parameterType="PostInfoVo" resultType="PostInfoVo">
+        select /* PostDao.getPostLike */
+               post_idx   as post_idx
+             , member_idx as member_idx
+          from post_info_like
+         where post_idx   = #{postIdx}
+           and member_idx = #{memberIdx}
+    </select>
+
+    <insert id="createPostLike" parameterType="PostInfoVo">
+        insert /* PostDao.createPostLike */
+          into post_info_like (
+               post_idx
+             , member_idx
+        ) values (
+               #{postIdx}
+             , #{memberIdx}
+        )
+    </insert>
+
+    <delete id="deletePostLike" parameterType="PostInfoVo">
+        delete /* PostDao.deletePostLike */
+          from post_info_like
+         where post_idx   = #{postIdx}
+           and member_idx = #{memberIdx}
+    </delete>
+
+    <select id="getPostUnlike" parameterType="PostInfoVo" resultType="PostInfoVo">
+        select /* PostDao.getPostUnlike */
+               post_idx   as post_idx
+             , member_idx as member_idx
+          from post_info_unlike
+         where post_idx   = #{postIdx}
+           and member_idx = #{memberIdx}
+    </select>
+
+    <insert id="createPostUnlike" parameterType="PostInfoVo">
+        insert /* PostDao.createPostUnlike */
+          into post_info_unlike (
+               post_idx
+             , member_idx
+        ) values (
+               #{postIdx}
+             , #{memberIdx}
+        )
+    </insert>
+
+    <delete id="deletePostUnlike" parameterType="PostInfoVo">
+        delete /* PostDao.deletePostUnlike */
+          from post_info_unlike
+         where post_idx   = #{postIdx}
+           and member_idx = #{memberIdx}
+    </delete>
+
+</mapper>

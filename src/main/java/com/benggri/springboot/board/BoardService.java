@@ -3,6 +3,7 @@ package com.benggri.springboot.board;
 import com.benggri.springboot.board.vo.BoardVo;
 import com.benggri.springboot.comm.vo.CommPaginationResVo;
 import com.benggri.springboot.comm.vo.CommResultVo;
+import com.benggri.springboot.exception.InternalServerErrorException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -35,22 +36,19 @@ public class BoardService {
     }
 
     public CommResultVo createBoard(BoardVo boardVo) {
-        int result = boardDao.createBoard(boardVo);
-        if (result < 1) return CommResultVo.builder().code(500).build();
+        if (boardDao.createBoard(boardVo) < 1) throw new InternalServerErrorException("게시판 생성 중 오류가 발생하였습니다");
 
         return CommResultVo.builder().code(200).data(boardVo).build();
     }
 
     public CommResultVo updateBoard(BoardVo boardVo) {
-        int result = boardDao.updateBoard(boardVo);
-        if (result < 1) return CommResultVo.builder().code(400).build();
+        if (boardDao.updateBoard(boardVo) < 1) throw new InternalServerErrorException("게시판 수정 중 오류가 발생하였습니다");
 
         return CommResultVo.builder().code(200).data(boardVo).build();
     }
 
     public CommResultVo deleteBoard(BoardVo boardVo) {
-        int result = boardDao.deleteBoard(boardVo);
-        if (result < 1) return CommResultVo.builder().code(400).build();
+        if (boardDao.deleteBoard(boardVo) < 1) throw new InternalServerErrorException("게시판 수정 중 오류가 발생하였습니다");
 
         return CommResultVo.builder().code(200).data(boardVo).build();
     }
