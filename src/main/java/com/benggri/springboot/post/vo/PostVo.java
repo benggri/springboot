@@ -31,9 +31,9 @@ public class PostVo extends CommPaginationReqVo {
     private String memberName;
     @Schema(description="회원 table 컬럼 닉네임", example="string")
     private String nickname;
-    @Schema(description="게시판 table 컬럼 작성일시", example="20001231")
+    @Schema(description="게시판 table 컬럼 작성일시", example="20121212235959")
     private String writeDate;
-    @Schema(description="게시판 table 컬럼 상태코드", example="0000")
+    @Schema(description="게시판 table 컬럼 상태코드", example="1000")
     private String sttsCd;
     @Schema(description="게시판_정보 table 컬럼 조회수", example="0")
     private long viewCnt;
@@ -42,4 +42,7 @@ public class PostVo extends CommPaginationReqVo {
     @Schema(description="게시판_정보 table 컬럼 싫어요수", example="0")
     private long unlikeCnt;
 
+    public PostInfoVo toPostInfoVo() {
+        return PostInfoVo.builder().postIdx(this.postIdx).memberIdx(this.writerIdx).build();
+    }
 }

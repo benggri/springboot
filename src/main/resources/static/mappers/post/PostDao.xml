@@ -8,9 +8,10 @@
                inner join post_info   d1 on m.post_idx   = d1.post_idx
                inner join member_info d2 on m.writer_idx = d2.member_idx
          where 1=1
+           and m.board_idx = #{boardIdx}
            and (m.stts_cd = '1000'
-        <if test='writer_idx != 0'>
-               or m.writer_idx = #{writer_idx}
+        <if test='writerIdx != 0'>
+               or m.writer_idx = #{writerIdx}
         </if>
            )
         <if test='title !=null and title != ""'>
@@ -72,7 +73,8 @@
           from            post         m
                inner join post_info   d1 on m.post_idx   = d1.post_idx
                inner join member_info d2 on m.writer_idx = d2.member_idx
-         where m.post_idx = #{postIdx}
+         where m.post_idx  = #{postIdx}
+           and m.board_idx = #{boardIdx}
     </select>
 
     <insert id="createPost" parameterType="PostVo" useGeneratedKeys="true" keyProperty="postIdx">
