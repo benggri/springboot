@@ -47,7 +47,7 @@ public class PostController {
         @Parameter(name="board_idx", required=true, description="조회할 게시판_IDX") @PathVariable("board_idx") long board_idx,
         @Parameter(name="post_idx", required=true, description="조회할 게시글_IDX") @PathVariable("post_idx") long post_idx
     ) {
-        if (board_idx < 1 || post_idx < 1) throw new BadRequestException("존재하지 않는 게시판 정보입니다");
+        if (board_idx < 1 || post_idx < 1) throw new BadRequestException("존재하지 않는 게시글 정보입니다");
         return CommResponseVo.builder()
                              .resultVo(postService.getPost(PostVo.builder().boardIdx(board_idx).postIdx(post_idx).build()))
                              .build()
@@ -59,7 +59,7 @@ public class PostController {
     public ResponseEntity<PostVo> createPost(
         HttpServletRequest request,
         @AuthenticationPrincipal CustomUserDetailsVo customUserDetailsVo,
-        @Parameter(name="board_idx", required=true, description="조회할 게시판_IDX") @PathVariable("board_idx") long board_idx,
+        @Parameter(name="board_idx", required=true, description="게시글 생성할 게시판_IDX") @PathVariable("board_idx") long board_idx,
         @RequestBody PostVo postVo
     ) {
         if (board_idx < 1) throw new BadRequestException("존재하지 않는 게시판 정보입니다");
@@ -68,6 +68,44 @@ public class PostController {
 
         return CommResponseVo.builder()
                              .resultVo(postService.createPost(postVo))
+                             .build()
+                             .toResponseEntity();
+    }
+
+    @Operation(summary = "게시글 수정 API", description = "게시글 수정 API")
+    @PutMapping("{board_idx}/post")
+    public ResponseEntity<PostVo> updatePost(
+        HttpServletRequest request,
+        @AuthenticationPrincipal CustomUserDetailsVo customUserDetailsVo,
+        @Parameter(name="board_idx", required=true, description="조회할 게시판_IDX") @PathVariable("board_idx") long board_idx,
+        @RequestBody PostVo postVo
+    ) {
+        if (board_idx < 1) throw new BadRequestException("존재하지 않는 게시판 정보입니다");
+        postVo.setBoardIdx(board_idx);
+        postVo.setWriterIdx(customUserDetailsVo.getMemberIdx());
+
+        return CommResponseVo.builder()
+                             .resultVo(postService.updatePost(postVo))
+                             .build()
+                             .toResponseEntity();
+    }
+
+    @Operation(summary = "게시글 삭제 API", description = "게시글 삭제 API")
+    @DeleteMapping("{board_idx}/post/{post_idx}")
+    public ResponseEntity<PostVo> deletePost(
+        HttpServletRequest request,
+        @AuthenticationPrincipal CustomUserDetailsVo customUserDetailsVo,
+        @Parameter(name="board_idx", required=true, description="조회할 게시판_IDX") @PathVariable("board_idx") long board_idx,
+        @Parameter(name="post_idx", required=true, description="조회할 게시글_IDX") @PathVariable("post_idx") long post_idx
+    ) {
+        if (board_idx < 1 || post_idx < 1) throw new BadRequestException("존재하지 않는 게시글 정보입니다");
+
+        return CommResponseVo.builder()
+                             .resultVo(postService.deletePost(PostVo.builder()
+                                                                    .boardIdx(board_idx)
+                                                                    .postIdx(post_idx)
+                                                                    .writerIdx(customUserDetailsVo.getMemberIdx())
+                                                                    .build()))
                              .build()
                              .toResponseEntity();
     }

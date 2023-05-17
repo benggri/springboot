@@ -16,6 +16,7 @@ public interface PostDao {
     int createPostInfo(PostVo postVo);
     int updatePost(PostVo postVo);
     int deletePost(PostVo postVo);
+    int deletePostInfo(PostVo postVo);
     int updatePostView(PostVo postVo);
     int updatePostLike(PostVo postVo);
     int updatePostLikeCancel(PostVo postVo);

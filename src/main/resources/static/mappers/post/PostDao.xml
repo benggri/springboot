@@ -120,6 +120,12 @@
          where post_idx = #{postIdx}
     </delete>
 
+    <delete id="deletePostInfo" parameterType="PostVo">
+        delete /* PostDao.deletePostInfo */
+          from post_info
+         where post_idx = #{postIdx}
+    </delete>
+
     <update id="updatePostView" parameterType="PostVo">
         update /* PostDao.updatePostView */
                post_info

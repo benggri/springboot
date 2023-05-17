@@ -34,7 +34,6 @@ public class PostService {
                                                     .build()
                                                     .pagination())
                            .build();
-
     }
 
     public CommResultVo getPost(PostVo postVo) {
@@ -74,6 +73,7 @@ public class PostService {
         if (isEmptyObj(post)) throw new BadRequestException("존재하지 않는 게시글입니다");
 
         if (post.getWriterIdx() != postVo.getWriterIdx()) throw new UnauthorizedException("게시글 삭제는 작성자만 할 수 있습니다");
+        if (postDao.deletePostInfo(postVo) < 1) throw new InternalServerErrorException("게시글 삭제 중 오류가 발생하였습니다");
         if (postDao.deletePost(postVo) < 1) throw new InternalServerErrorException("게시글 삭제 중 오류가 발생하였습니다");
 
         return CommResultVo.builder().code(200).data("게시글 삭제가 완료되었습니다").build();
