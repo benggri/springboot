@@ -73,15 +73,17 @@ public class PostController {
     }
 
     @Operation(summary = "게시글 수정 API", description = "게시글 수정 API")
-    @PutMapping("{board_idx}/post")
+    @PutMapping("{board_idx}/post/{post_idx}")
     public ResponseEntity<PostVo> updatePost(
         HttpServletRequest request,
         @AuthenticationPrincipal CustomUserDetailsVo customUserDetailsVo,
-        @Parameter(name="board_idx", required=true, description="조회할 게시판_IDX") @PathVariable("board_idx") long board_idx,
+        @Parameter(name="board_idx", required=true, description="수정할 게시판_IDX") @PathVariable("board_idx") long board_idx,
+        @Parameter(name="post_idx", required=true, description="조회할 게시글_IDX") @PathVariable("post_idx") long post_idx,
         @RequestBody PostVo postVo
     ) {
         if (board_idx < 1) throw new BadRequestException("존재하지 않는 게시판 정보입니다");
         postVo.setBoardIdx(board_idx);
+        postVo.setPostIdx(post_idx);
         postVo.setWriterIdx(customUserDetailsVo.getMemberIdx());
 
         return CommResponseVo.builder()
@@ -95,8 +97,8 @@ public class PostController {
     public ResponseEntity<PostVo> deletePost(
         HttpServletRequest request,
         @AuthenticationPrincipal CustomUserDetailsVo customUserDetailsVo,
-        @Parameter(name="board_idx", required=true, description="조회할 게시판_IDX") @PathVariable("board_idx") long board_idx,
-        @Parameter(name="post_idx", required=true, description="조회할 게시글_IDX") @PathVariable("post_idx") long post_idx
+        @Parameter(name="board_idx", required=true, description="삭제할 게시판_IDX") @PathVariable("board_idx") long board_idx,
+        @Parameter(name="post_idx", required=true, description="삭제할 게시글_IDX") @PathVariable("post_idx") long post_idx
     ) {
         if (board_idx < 1 || post_idx < 1) throw new BadRequestException("존재하지 않는 게시글 정보입니다");
 
