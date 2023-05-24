@@ -2,49 +2,51 @@
 <html lang="en">
 <head th:replace='/html/layout/head'></head>
 <body>
-
-    <header>
-        <nav class="navbar navbar-dark bg-dark">
-            <div class="container-fluid">
-                <a class="navbar-brand" href="javascript:void(0);">Header</a>
-                <div class="d-flex">
-                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                    <button class="btn btn-outline-success" type="button">Search</button>
-                </div>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                        <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="javascript:void(0);">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="javascript:void(0);">Link</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-    </header>
-
     <div class="container-fluid">
-        <div class="row">
-            <div class="col-md-12">
-                <div class="card">
-                    <div class="card-header">
-                        Bootstrap 5 Card
-                    </div>
-                    <div class="card-body">
-                        card body
-                    </div>
-                    <div class="card-footer">
-                        card footer
+        <div class="mt-5 d-flex justify-content-center">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header">
+                            Login
+                        </div>
+                        <div class="card-body">
+                            <div class="row mb-1">
+                                <label for="input_member_id" class="form-label">ID</label>
+                                <input type="text" class="form-control" id="input_member_id" placeholder=""/>
+                            </div>
+                            <div class="row mb-1">
+                                <label for="input_member_password" class="form-label">Password</label>
+                                <input type="password" class="form-control" id="input_member_password" placeholder=""/>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <div class="row mb-1">
+                                <button id="btn_login" type="button" class="btn btn-secondary">Login</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    <script type="text/javascript">
+        $('#btn_login').on('click', () => {
+            if (util.isEmptyObj($('#input_member_id').val()) ||
+                util.isEmptyObj($('#input_member_password').val()) ) {
+                console.log('필수입력값오류');
+                return false;
+            }
 
+            axios.post('/auth/login', {memberId:$('#input_member_id').val(), memberPassword:$('#input_member_password').val()})
+                 .then((res) => {
+                     util.setSession('token', res.data.accessToken);
+                 })
+                .catch((res) => {
+                    $('#input_member_id').val('');
+                    $('#input_member_password').val('');
+                });
+        });
+    </script>
 </body>
 </html>

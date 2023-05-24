@@ -4,7 +4,6 @@ axios.interceptors.request.use(
         if (!util.isEmptyObj(util.getSession('token'))) {
             config.headers['Authorization'] = `Bearer ${util.getSession('token')}`;
         }
-        console.log(config);
         return config;
     }, (error) => {
         return Promise.reject(error);
