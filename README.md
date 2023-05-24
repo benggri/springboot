@@ -20,6 +20,10 @@
 - MyBatis
 - JPA
 - MariaDB
+- thymeleaf
+- bootstrap 5
+- jquery
+- axios
 
 ## 사용 프로그램
 
