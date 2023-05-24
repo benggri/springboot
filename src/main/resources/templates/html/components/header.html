@@ -10,15 +10,23 @@
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="javascript:void(0);">Home</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="javascript:void(0);">Link</a>
-          </li>
-        </ul>
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0 text-center" id="nav_menu"></ul>
       </div>
     </div>
   </nav>
 </header>
+
+<script type="text/javascript">
+    if (util.isEmptyObj(util.getSession('token'))) window.location.href = '/';
+
+    /* TODO 일단은 게시판 목록만 메뉴로 노출 추후 메뉴를 설계하고 난 뒤 개발 예정 */
+    $(() => {
+      axios.get('/boards', {})
+           .then((res) => {
+             $('#nav_menu').children().remove();
+             res.data.data.forEach((board) => {
+               $('#nav_menu').append(`<li class="nav-item"><a class="nav-link" aria-current="page" href="javascript:void(0);">${board.boardName}</a></li>`);
+             });
+           });
+    });
+</script>

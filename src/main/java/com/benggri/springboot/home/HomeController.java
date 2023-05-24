@@ -11,8 +11,15 @@ import javax.servlet.http.HttpServletRequest;
 public class HomeController {
 
     @GetMapping("/")
-    public String index(
+    public String login(
         HttpServletRequest request
+    ) {
+        return "html/login";
+    }
+
+    @GetMapping("v/index")
+    public String home(
+            HttpServletRequest request
     ) {
         return "html/index";
     }

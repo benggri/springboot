@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head th:replace='/html/layout/head'></head>
+<body>
+    <div class="container-fluid">
+        <div class="mt-5 d-flex justify-content-center">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header">
+                            Login
+                        </div>
+                        <div class="card-body">
+                            <div class="row mb-1">
+                                <label for="input_member_id" class="form-label">ID</label>
+                                <input type="text" class="form-control" id="input_member_id" placeholder=""/>
+                            </div>
+                            <div class="row mb-1">
+                                <label for="input_member_password" class="form-label">Password</label>
+                                <input type="password" class="form-control" id="input_member_password" placeholder=""/>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <div class="row mb-1">
+                                <button id="btn_login" type="button" class="btn btn-secondary">Login</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        if (!util.isEmptyObj(util.getSession('token'))) window.location.href = '/v/index';
+
+        $('#btn_login').on('click', () => {
+            if (util.isEmptyObj($('#input_member_id').val()) ||
+                util.isEmptyObj($('#input_member_password').val()) ) {
+                console.log('필수입력값오류');
+                return false;
+            }
+
+            axios.post('/auth/login', {memberId:$('#input_member_id').val(), memberPassword:$('#input_member_password').val()})
+                 .then((res) => {
+                     console.log(res);
+                     util.setSession('memberId'   , res.data.memberId);
+                     util.setSession('memberIdx'  , res.data.memberIdx);
+                     util.setSession('memberName' , res.data.memberName);
+                     util.setSession('token'      , res.data.accessToken);
+                     window.location.href = '/v/index';
+                 })
+                .catch((res) => {
+                    $('#input_member_id').val('');
+                    $('#input_member_password').val('');
+                });
+        });
+    </script>
+</body>
+</html>
