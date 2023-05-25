@@ -62,7 +62,7 @@
                          console.log(res);
                          $('#post_table').children().remove();
                          res.data.data.forEach((post, idx) => {
-                             let tr = $('<tr></tr>').appendTo($('#post_table'));
+                             let tr = $('<tr style="height: 40px;"></tr>').appendTo($('#post_table'));
                              $(tr).append(`<th scope="row">${post.postIdx}</th>
                                            <td>${post.title}</td>
                                            <td>${post.nickname}</td>
@@ -72,15 +72,13 @@
                                            <td>${post.unlikeCnt}</td>`);
                          });
 
-                         if ( this.pagePerCnt - res.data.data.length > 0 ) {
-                             let defaultH = util.nvl($('#post_table').children('tr').height(), 41);
-                             let trH = defaultH * (this.pagePerCnt - res.data.data.length)
-                             $('#post_table').append(`<tr style="height: ${trH}px;">
-                                                          <td rowspan="${this.pagePerCnt - res.data.data.length}" colspan="7" class="text-center align-middle">
-                                                              <i class="bi bi-three-dots"></i>
-                                                          </td>
-                                                      </tr>`);
-                         }
+                         Array(this.pagePerCnt - res.data.data.length).fill(0).forEach((item, idx) => {
+                             $($('#post_table')).append(`<tr><td colspan="7" aria-hidden="true">
+                                                             <div class="placeholder-glow">
+                                                                 <div class="placeholder col-12"></div>
+                                                             </div>
+                                                         </td></tr>`);
+                         });
 
                          /* TODO pagenation 공통 처리 필요 처리 */
                          $('#post_pagination').children().remove();
