@@ -14,7 +14,7 @@
         <if test='boardName != null and boardName != ""'>
            and board_name like concat('%',#{boardName},'%')
         </if>
-         order by board_idx desc
+         order by board_idx
          limit #{limit} offset #{offset}
     </select>
 
