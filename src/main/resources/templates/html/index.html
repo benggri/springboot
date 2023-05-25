@@ -30,7 +30,16 @@
                 </div>
             </div>
             <div class="card-footer">
+                <div class="row">
+                    <div class="col-sm-6">
 
+                    </div>
+                    <div class="col-sm-6">
+                        <nav aria-label="page navigation">
+                            <ul class="pagination mb-0 justify-content-end" id="post_pagination"></ul>
+                        </nav>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -38,7 +47,8 @@
     <script type="text/javascript">
         class Board {
             constructor() {
-                this.boardIdx = 1;
+                this.boardIdx   = 1;
+                this.pagePerCnt = 10;
             }
 
             setBoardIdx(boardIdx) {
@@ -61,6 +71,34 @@
                                            <td>${post.likeCnt}</td>
                                            <td>${post.unlikeCnt}</td>`);
                          });
+                         Array(this.pagePerCnt - res.data.data.length).fill(0).forEach((item, idx) => {
+                             let tr = $('<tr></tr>').appendTo($('#post_table'));
+
+                             $(tr).append(`<td></td>
+                                           <td></td>
+                                           <td></td>
+                                           <td></td>
+                                           <td></td>
+                                           <td></td>
+                                           <td></td>`);
+                         });
+
+                         /* TODO pagenation 공통 처리 필요 처리 */
+                         $('#post_pagination').children().remove();
+                         if (res.data.startPage > 1) {
+                             $('#post_pagination').append(`<li class="page-item"><a class="page-link" href="javascript:board.getPosts(1);">Previous</a></li>`);
+                         } else {
+                             $('#post_pagination').append(`<li class="page-item disabled"><a class="page-link" href="javascript:void(0);" aria-disabled="true">Previous</a></li>`);
+                         }
+                         res.data.pages.forEach((page, idx) => {
+                             let active = ((pageNo == page) ? 'active' : '');
+                             $('#post_pagination').append(`<li class="page-item ${active}"><a class="page-link" href="javascript:board.getPosts(${page});">${page}</a></li>`);
+                         });
+                         if (res.data.endPage > pageNo) {
+                             $('#post_pagination').append(`<li class="page-item"><a class="page-link" href="javascript:board.getPosts(${res.data.endPage});">Next</a></li>`);
+                         } else {
+                             $('#post_pagination').append(`<li class="page-item disabled"><a class="page-link" href="javascript:void(0);" aria-disabled="true">Next</a></li>`);
+                         }
                      });
             }
         }
